@@ -1,6 +1,6 @@
-# Bookstore
+# Spring Boot Bookstore Microservices
 
-Java Spring Boot implementation of Bookstore-3. This repository contains a microservice-based bookstore system with backend services, Backend-for-Frontend (BFF) services, Kafka-based customer registration events, CRM email handling, Docker Compose support, Kubernetes manifests, and AWS CloudFormation deployment files.
+Java Spring Boot implementation of Bookstore. This repository contains a microservice-based bookstore system with backend services, Backend-for-Frontend (BFF) services, Kafka-based customer registration events, CRM email handling, Docker Compose support, Kubernetes manifests, and AWS CloudFormation deployment files.
 
 ## Services
 
