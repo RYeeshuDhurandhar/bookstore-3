@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mobile-bff
+  namespace: bookstore-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mobile-bff
+  template:
+    metadata:
+      labels:
+        app: mobile-bff
+    spec:
+      containers:
+      - name: mobile-bff
+        image: ryeeshu/mobile-bff:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 3000
+          initialDelaySeconds: 60
+          periodSeconds: 15
+          failureThreshold: 5
+        env:
+        - name: SERVER_PORT
+          value: "3000"
+        - name: BOOK_SERVICE_URL
+          value: "http://book-service"
+        - name: CUSTOMER_SERVICE_URL
+          value: "http://customer-service"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mobile-bff
+  namespace: bookstore-ns
+spec:
+  type: LoadBalancer
+  selector:
+    app: mobile-bff
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

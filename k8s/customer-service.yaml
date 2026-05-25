@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-service
+  namespace: bookstore-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: customer-service
+  template:
+    metadata:
+      labels:
+        app: customer-service
+    spec:
+      containers:
+      - name: customer-service
+        image: ryeeshu/customer-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: SERVER_PORT
+          value: "3000"
+        - name: DB_HOST
+          value: "bookstore-db-dev.cluster-ct40ymgiu3r4.us-east-1.rds.amazonaws.com"
+        - name: DB_NAME
+          value: "customer_db"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_USER
+          value: "customers_svc"
+        - name: DB_PASSWORD
+          value: "awsadmin"
+        - name: KAFKA_BROKERS
+          value: "52.73.13.84:9092,100.51.187.149:9092,52.54.87.18:9092"
+        - name: KAFKA_TOPIC
+          value: "rdhurand.customer.evt"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service
+  namespace: bookstore-ns
+spec:
+  selector:
+    app: customer-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
