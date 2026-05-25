@@ -59,20 +59,20 @@ The system uses MySQL for persistence, Kafka for asynchronous customer registrat
 ```text
 Client
   |
-  |--- Web requests ---> web-bff
-  |
-  |--- Mobile requests -> mobile-bff
-                         |
-                         |--- /books/* -----> book-service -----> book_db
-                         |
-                         |--- /customers/* -> customer-service -> customer_db
-                                                   |
-                                                   | publishes customer event
-                                                   v
-                                                Kafka topic
-                                                   |
-                                                   v
-                                              crm-service
+  |--- Web requests -----> web-bff -----|
+  |                                     |
+  |--- Mobile requests --> mobile-bff --|
+                                        |
+                                        |--- /books/* -----> book-service -----> book_db
+                                        |
+                                        |--- /customers/* -> customer-service -> customer_db
+                                                                 |
+                                                                 | publishes customer event
+                                                                 v
+                                                            Kafka topic
+                                                                 |
+                                                                 v
+                                                            crm-service
 ```
 
 The BFF services route requests based on the path:
